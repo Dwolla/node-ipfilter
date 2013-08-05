@@ -108,3 +108,37 @@ describe('enforcing IP address whitelist restrictions', function(){
     this.ipfilter( this.req, res, function(){});
   });
 });
+
+describe('enforce blacklist even when allowing local traffic', function() {
+  beforeEach(function(){
+    this.req = {
+      session: {},
+      headers: [],
+      connection: {
+        remoteAddress: ''
+      }
+    };
+  });
+
+  it('should deny all blacklisted ips even though it is private traffic', function( done ){
+    this.req.connection.remoteAddress = '127.0.0.1';
+    var res = {
+      end: function(msg){
+        assert.equal( 401, res.statusCode );
+        done();
+      }
+    };
+
+    this.ipfilter = ipfilter([ '127.0.0.1' ], { log: false, allowPrivateIPs: true });
+    this.ipfilter( this.req, res, function(){});
+  });
+
+  it('should allow private traffic if not explicitly blacklisted', function(done) {
+    this.req.connection.remoteAddress = '192.168.1.123';
+    this.ipfilter = ipfilter([ '127.0.0.1' ], { log: true, allowPrivateIPs: true, mode : 'allow' });
+    this.ipfilter( this.req, {}, function(){
+      done();
+    });
+  });
+
+});
