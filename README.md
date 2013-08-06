@@ -53,6 +53,23 @@ app.use(ipfilter(ips, {mode: 'allow'}));
 app.listen(3000);
 ```
 
+Blacklisting certain IP addresses, while allowing all other private IPs:
+
+```javascript
+// Init dependencies
+var express = require('express')
+    , ipfilter = require('ipfilter')
+    , app = express.createServer()
+    ;
+
+// Blacklist the following IPs
+var ips = ['192.168.1.2'];
+
+// Create the server
+app.use(ipfilter(ips, {mode: 'deny', allowPrivateIPs: true}));
+app.listen(3000);
+```
+
 ## Changelog
 
 0.0.4
