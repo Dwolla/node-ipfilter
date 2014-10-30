@@ -4,7 +4,7 @@
   "version": "0.0.4",
   "author": "Michael Schonfeld <michael@dwolla.com>",
   "dependencies": {
-      
+      "ipv6" : "latest"
   },
   "devDependencies": {
     "mocha": "~1.4.2"
